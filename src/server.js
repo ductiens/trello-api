@@ -16,12 +16,13 @@ const START_SERVER = () => {
   // });
 
   //Enable (bật) req.body json data
+  //Kích hoạt middleware để parse body JSON.
   app.use(express.json());
 
   //Use APIs v1
   app.use("/v1", APIs_V1);
 
-  //Middleware xử lý lỗi tập trung
+  //Middleware xử lý lỗi tập trung. Express sẽ tìm middleware xử lý lỗi đầu tiên được đăng ký với 4 tham số
   app.use(errorHandlingMiddleware);
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {

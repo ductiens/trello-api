@@ -10,6 +10,7 @@ const createNew = async (req, res, next) => {
    * Và thông thường trong thực tế, điều tốt nhất trong hệ thống là hãy luôn validate dữ liệu ở cả Back-End và Front-End
    */
 
+  //Định nghĩa schema Joi để kiểm tra req.body
   const correctCondition = Joi.object({
     title: Joi.string().required().min(3).max(50).trim().strict().messages({
       "any.required": "Title is required!!",
@@ -21,6 +22,7 @@ const createNew = async (req, res, next) => {
     description: Joi.string().required().min(3).max(256).trim().strict(),
   });
 
+  //Kiểm tra dữ liệu req.body theo schema:
   try {
     // console.log("req.body: ", req.body);
 

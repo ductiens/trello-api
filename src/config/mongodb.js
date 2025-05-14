@@ -6,10 +6,11 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import { env } from "~/config/environment";
 
-// Khi tạo 1 đối tượng trelloDatabaseInstance ban đầu là null (vì chúng ta chưa connect)
+// Khai báo biến trelloDatabaseInstance để lưu trữ kết nối database, khởi tạo là null vì chưa kết nối.
 let trelloDatabaseInstance = null;
 
 //Khởi tạo 1 đối tượng MongoClientInstance để connect tới mongodb
+//Instance là một đối tượng cụ thể được tạo từ một class
 const mongoClientInstance = new MongoClient(env.MONGODB_URI, {
   //Lưu ý: Cái serverApi có từ phiên bản 5.0.0 trở lên, có thể không cần dùng nó, còn nếu dùng nó là chúng ta
   //sẽ chỉ định 1 cái Stable API Version của MongoDB
