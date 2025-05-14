@@ -4,7 +4,7 @@ import { CONNECT_DB, CLOSE_DB, GET_DB } from "~/config/mongodb";
 
 import exitHook from "async-exit-hook";
 import { env } from "~/config/environment";
-import {APIs_V1} from '~/routes/v1'
+import { APIs_V1 } from "~/routes/v1";
 
 const START_SERVER = () => {
   const app = express();
@@ -14,9 +14,11 @@ const START_SERVER = () => {
   //   res.end("<h1>Hello World!</h1><hr>");
   // });
 
-  app.get("/", (req, res) => {
-    res.end("<h1>Hello World!</h1><hr>");
-  });
+  //Enable (bật) req.body json data
+  app.use(express.json())
+
+  //Use APIs v1
+  app.use("/v1", APIs_V1);
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {
     console.log(`3. Hello ${env.AUTHOR}, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`);
