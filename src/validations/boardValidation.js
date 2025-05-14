@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { StatusCodes } from "http-status-codes";
+import ApiError from "~/utils/ApiError";
 
 const createNew = async (req, res, next) => {
   /**Note: Mặc định chúng ta không cần phải custom message ở phía Back-End làm gì vì để cho Front-End tự validate và custom
@@ -27,15 +28,19 @@ const createNew = async (req, res, next) => {
     await correctCondition.validateAsync(req.body, { abortEarly: false });
 
     //Validate dữ liệu xong xuôi hợp lệ thì cho request đi tiếp sang Controller
-    next(); //next() sẽ chạy sang tầng tiế theo là boardController.createNew
+    next(); //next() sẽ chạy sang tầng tiếp theo là boardController.createNew
 
     // res.status(StatusCodes.CREATED).json({ message: "POST from Validation: create new board" });
   } catch (error) {
     // console.log(error);
     // console.log(new Error(error));
-    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
-      errors: new Error(error).message,
-    });
+    // res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+    //   errors: new Error(error).message,
+    // });
+
+    const errorMessage = new Error(error).message;
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage);
+    next(customError);
   }
 };
 

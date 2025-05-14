@@ -1,9 +1,6 @@
 /**
  * config
  *
- * carinandt
- * YTW9Y1NPWsGaH5F3
- *
  */
 
 import { MongoClient, ServerApiVersion } from "mongodb";
