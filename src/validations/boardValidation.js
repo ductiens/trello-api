@@ -25,9 +25,11 @@ const createNew = async (req, res, next) => {
 
     //Chỉ định abortEarly: false để trường hợp có nhiều lỗi Validation thì trả về tất cả lỗi
     await correctCondition.validateAsync(req.body, { abortEarly: false });
-    // next()
 
-    res.status(StatusCodes.CREATED).json({ message: "POST from Validation: create new board" });
+    //Validate dữ liệu xong xuôi hợp lệ thì cho request đi tiếp sang Controller
+    next(); //next() sẽ chạy sang tầng tiế theo là boardController.createNew
+
+    // res.status(StatusCodes.CREATED).json({ message: "POST from Validation: create new board" });
   } catch (error) {
     // console.log(error);
     // console.log(new Error(error));
