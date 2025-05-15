@@ -21,7 +21,7 @@ const createNew = async (req, res, next) => {
     //===================================================================================
 
     //Điều hướng dữ liệu sang tầng Service
-    const createBoard = await boardService.createNew(req.body)
+    const createBoard = await boardService.createNew(req.body);
 
     // throw new ApiError(StatusCodes.BAD_GATEWAY, "loi");
 
@@ -38,6 +38,20 @@ const createNew = async (req, res, next) => {
   }
 };
 
+const getDetails = async (req, res, next) => {
+  try {
+    // console.log("req.params: ", req.params);
+    const boardId = req.params.id;
+    const board = await boardService.getDetails(boardId);
+    res.status(StatusCodes.OK).json(board);
+  } catch (error) {
+    // console.log(error);
+
+    next(error);
+  }
+};
+
 export const boardController = {
   createNew,
+  getDetails,
 };

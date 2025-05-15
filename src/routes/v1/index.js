@@ -11,7 +11,7 @@ Router.get("/status", (req, res) => {
 });
 
 // === Board APIs ===
-//Router.use([path], middleware); à phương thức để đăng ký một middleware hoặc router áp dụng cho tất cả 
+//Router.use([path], middleware); là phương thức để đăng ký một middleware hoặc router áp dụng cho tất cả
 //phương thức HTTP (GET, POST, PUT, ...) trên một đường dẫn
 Router.use("/boards", boardRoute);
 

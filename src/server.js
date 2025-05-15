@@ -7,8 +7,14 @@ import { env } from "~/config/environment";
 import { APIs_V1 } from "~/routes/v1";
 import { errorHandlingMiddleware } from "~/middlewares/errorHandlingMiddleware";
 
+import cors from "cors";
+import { corsOptions } from "~/config/cors";
+
 const START_SERVER = () => {
   const app = express();
+
+  //Xử lý CORS
+  app.use(cors(corsOptions));
 
   // app.get("/", async (req, res) => {
   //   console.log(await GET_DB().listCollections().toArray());
