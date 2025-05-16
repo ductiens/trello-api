@@ -4,6 +4,7 @@ import { slugify } from "~/utils/formatters";
 import { boardModel } from "~/models/boardModel";
 import ApiError from "~/utils/ApiError";
 import { StatusCodes } from "http-status-codes";
+import { cloneDeep } from "lodash";
 
 const createNew = async (reqBody) => {
   try {
@@ -45,7 +46,19 @@ const getDetails = async (boardId) => {
       throw new ApiError(StatusCodes.NOT_FOUND, "Board not found");
     }
 
-    return board;
+    //B1: Deep Clone board ra 1 cái mới để xử lý, không ảnh hưởng tới cái board ban đầu, tùy mục đích về sau có cần clone deep
+    //hay không
+    const resBoard = cloneDeep(board);
+    //B2: Đưa card về đung column của nó
+    resBoard.columns.forEach((column) => {
+      //Vì columnId, _id là ObjectId nên phải chuyển sang string. Còn equals đc mongodb hỗ trợ
+      // column.cards = resBoard.cards.filter((card) => card.columnId.toString() === column._id.toString()); //C1
+      column.cards = resBoard.cards.filter((card) => card.columnId.equals(column._id)); //C2
+    });
+    //B3: Xóa mảng card khỏi board ban đầu
+    delete resBoard.cards;
+
+    return resBoard;
   } catch (error) {
     throw error;
   }
