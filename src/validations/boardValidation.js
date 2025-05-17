@@ -2,6 +2,7 @@ import Joi from "joi";
 import { StatusCodes } from "http-status-codes";
 import ApiError from "~/utils/ApiError";
 import { BOARD_TYPES } from "~/utils/constants";
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/validators";
 
 const createNew = async (req, res, next) => {
   /**Note: Mặc định chúng ta không cần phải custom message ở phía Back-End làm gì vì để cho Front-End tự validate và custom
@@ -51,6 +52,28 @@ const createNew = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  //Lưu ý: Không dùng required() trong trường hợp update
+  const correctCondition = Joi.object({
+    title: Joi.string().min(3).max(50).trim().strict(),
+    description: Joi.string().min(3).max(256).trim().strict(),
+    type: Joi.string().valid(...Object.values(BOARD_TYPES)),
+    columnOrderIds: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)),
+  });
+
+  try {
+    //Chỉ định abortEarly: false để trường hợp có nhiều lỗi Validation thì trả về tất cả lỗi
+    //allowUnknown là mình được đẩy thêm fields ngoài những field đã định nghĩa trong correctCondition
+    await correctCondition.validateAsync(req.body, { abortEarly: false, allowUnknown: true });
+    next();
+  } catch (error) {
+    const errorMessage = new Error(error).message;
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage);
+    next(customError);
+  }
+};
+
 export const boardValidation = {
   createNew,
+  update,
 };
