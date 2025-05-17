@@ -36,8 +36,8 @@ const createNew = async (data) => {
     const validData = await validateBeforeCreate(data);
 
     // Thêm board vào database - Collection trong MongoDB tương đương với table trong SQL
-    const createBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(validData);
-    return createBoard;
+    const createdBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(validData);
+    return createdBoard;
   } catch (error) {
     throw new Error(error);
   }
@@ -96,7 +96,24 @@ const getDetails = async (id) => {
         },
       ])
       .toArray();
-    return result[0] || {};
+    return result[0] || null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+//Nhiệm vụ push columnId vào cuối mảng columnOrderIds
+const pushColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(String(column.boardId)) },
+        { $push: { columnOrderIds: new ObjectId(String(column._id)) } },
+        { returnDocument: "after" }
+      );
+
+    return result.value;
   } catch (error) {
     throw new Error(error);
   }
@@ -108,4 +125,5 @@ export const boardModel = {
   createNew,
   findOneById,
   getDetails,
+  pushColumnOrderIds,
 };
