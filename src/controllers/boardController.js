@@ -26,6 +26,7 @@ const createNew = async (req, res, next) => {
     // throw new ApiError(StatusCodes.BAD_GATEWAY, "loi");
 
     //Có kết quả thì trả về phía Client
+    //Controller là nơi CUỐI CÙNG trong chuỗi xử lý request, nó PHẢI trả về response cho client
     res.status(StatusCodes.CREATED).json(createBoard);
   } catch (error) {
     // console.log(error);
@@ -41,12 +42,11 @@ const createNew = async (req, res, next) => {
 const getDetails = async (req, res, next) => {
   try {
     // console.log("req.params: ", req.params);
-    const boardId = req.params.id;
-    const board = await boardService.getDetails(boardId);
+    const boardId = req.params.id; // Lấy boardId từ params của request
+    const board = await boardService.getDetails(boardId); // Gọi service để lấy thông tin chi tiết board
     res.status(StatusCodes.OK).json(board);
   } catch (error) {
     // console.log(error);
-
     next(error);
   }
 };
@@ -61,9 +61,19 @@ const update = async (req, res, next) => {
     next(error);
   }
 };
+const moveCardToDifferentColumn = async (req, res, next) => {
+  try {
+    const result = await boardService.moveCardToDifferentColumn(req.body);
+
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const boardController = {
   createNew,
   getDetails,
   update,
+  moveCardToDifferentColumn,
 };

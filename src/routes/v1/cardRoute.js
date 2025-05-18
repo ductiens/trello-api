@@ -9,4 +9,5 @@ Router.route("/")
   .post(cardValidation.createNew, cardController.createNew); //Gọi middleware cardValidation.createNew để kiểm
 // tra dữ liệu, sau đó gọi cardController.createNew để xử lý.
 
+
 export const cardRoute = Router;
