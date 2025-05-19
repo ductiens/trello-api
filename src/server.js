@@ -31,9 +31,17 @@ const START_SERVER = () => {
   //Middleware xử lý lỗi tập trung. Express sẽ tìm middleware xử lý lỗi đầu tiên được đăng ký với 4 tham số
   app.use(errorHandlingMiddleware);
 
-  app.listen(env.APP_PORT, env.APP_HOST, () => {
-    console.log(`3. Hello ${env.AUTHOR}, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`);
-  });
+  //Môi trường Production (cụ thẻ hiện tại đang support cho render.com)
+  if (env.BUILD_MODE === "production") {
+    app.listen(process.env.PORT, () => {
+      console.log(`3. Hello ${env.AUTHOR}, I am running at Port: ${process.env.PORT}`);
+    });
+  } else {
+    //Môi trường Local Dev
+    app.listen(env.LOCAL_DEV_APP_PORT, env.LOCAL_DEV_APP_HOST, () => {
+      console.log(`3. Hello ${env.AUTHOR}, I am running at http://${env.LOCAL_DEV_APP_HOST}:${env.LOCAL_DEV_APP_PORT}/`);
+    });
+  }
 
   //Thực hiện các tác vụ cleanup trước khi dừng server
   exitHook(() => {
