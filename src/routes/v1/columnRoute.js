@@ -10,6 +10,7 @@ Router.route("/")
 // tra dữ liệu, sau đó gọi columnController.createNew để xử lý.
 
 Router.route("/:id")
-  .put(columnValidation.update, columnController.update); //update : PUT /v1/column/:id
+  .put(columnValidation.update, columnController.update) //update : PUT /v1/column/:id
+  .delete(columnValidation.deleteItem, columnController.deleteItem)
 
 export const columnRoute = Router;

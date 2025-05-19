@@ -47,16 +47,16 @@ const createNew = async (data) => {
 };
 
 // Hàm tìm board theo ID
-const findOneById = async (id) => {
+const findOneById = async (boardId) => {
   try {
-    // console.log(id);
-    // const testId = new ObjectId(String(id));
+    // console.log(boardId);
+    // const testId = new ObjectId(String(boardId));
     // console.log(testId);
 
     const result = await GET_DB()
       .collection(BOARD_COLLECTION_NAME)
       .findOne({
-        _id: new ObjectId(String(id)),
+        _id: new ObjectId(String(boardId)),
       });
     return result;
   } catch (error) {
@@ -122,6 +122,24 @@ const pushColumnOrderIds = async (column) => {
   }
 };
 
+//Lấy 1 phần tử columnId ra khỏi mảng columnOrderIds
+//Dùng $pull trong mongodb ở trường hợp này để lấy 1 phần tử ra khỏi mảng rồi xóa nó đi
+const pullColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(String(column.boardId)) },
+        { $pull: { columnOrderIds: new ObjectId(String(column._id)) } },
+        { returnDocument: "after" }
+      );
+
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const update = async (boardId, updateData) => {
   try {
     //Lọc những fields mà ta không cho phép cập nhật linh tinh
@@ -154,4 +172,5 @@ export const boardModel = {
   getDetails,
   pushColumnOrderIds,
   update,
+  pullColumnOrderIds,
 };
